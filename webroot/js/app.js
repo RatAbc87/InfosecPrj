@@ -16,11 +16,14 @@ function countrySearch() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-          $('#result-form').innerHTML = this.responseText;
-          $('#result-form').show();
+          processResults(this);
         }
       };
 
     xmlhttp.open("GET", "api/index.php?q=" + str, true);
     xmlhttp.send();
+}
+
+function processResults(xhttp) {
+  responsebody = xhttp.responseText;
 }
