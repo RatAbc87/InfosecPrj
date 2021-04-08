@@ -20,7 +20,8 @@ document.querySelector('form').addEventListener('submit', event => {
 });
 
 function countrySearch() {
-    search = $("#search-form input").val();
+    var search = $("#search_query").val();
+    var search_type = $("#search_type").val();
     
     //If user didn't enter a query, abort the search and display an error message
     if (search.length == 0) {
@@ -28,7 +29,12 @@ function countrySearch() {
       return;
     }
 
-    $.getJSON("api/index.php",{search:search}).done(function(data){
+    var searchParams = {
+      search: search,
+      search_type: search_type
+    }
+
+    $.getJSON("api/index.php",searchParams).done(function(data){
       responseBody = data;
 
       var country_count = 0;
@@ -92,3 +98,13 @@ function incrementRegions(regions, region, subregion) {
     }
   }
 }
+
+$(document).ready(function(e){
+  $('.search-panel .dropdown-menu').find('a').click(function(e) {
+      e.preventDefault();
+      var param = $(this).attr("href").replace("#","");
+      var concept = $(this).text();
+      $('.search-panel span#search_concept').text(concept);
+      $('.input-group #search_type').val(param);
+  });
+});

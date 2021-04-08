@@ -40,18 +40,22 @@ class Country
 
 //Get the query
 $query = $_REQUEST["search"];
+$search_type = $_REQUEST["search_type"];
 
 //Perform search if we have a query value
 if ($query !== "") {
 
-    $query_len = strlen($query);
-    if ($query == "all") {
+    if ($search_type == "all") {
         $api = "all";
         $query = "";
-    } else if ($query_len == 2 || $query_len == 3) {
-        $api = "alpha";
-    } else {
+    } else if (str_contains($search_type, "name")) {
         $api = "name";
+    } else if ($search_type == "alpha") {
+        $api = $search_type;
+    } else {
+        //Invalid value, echo back nothing
+        header('Content-Type: application/json');
+        echo json_encode();
     }
 
     $response = file_get_contents("https://restcountries.eu/rest/v2/{$api}/{$query}");

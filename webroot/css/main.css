@@ -34,4 +34,10 @@
   font-style: italic;
 }
 
+.scrollable-dropdown {
+  height: auto;
+  max-height: 320px;
+  overflow-x: hidden;
+}
+
 /*# sourceMappingURL=main.css.map */
