@@ -1,29 +1,94 @@
-//Write your javascript here, or roll your own. It's up to you.
-//Make your ajax call to http://localhost:8765/api/index.php here
+//Compile the result template
+var source = $("#results-template").html();
+const resultTemplate = Handlebars.compile(source);
 
+var source = $("#summary-template").html();
+const summaryTemplate = Handlebars.compile(source);
+
+function isDefined(value) {
+  return value !== undefined && value.length > 0;
+};
+
+Handlebars.registerHelper('isdefined', function(value) {
+  return isDefined(value);
+});
+
+//Prevent form submit from refreshing the page, and submit the search
 document.querySelector('form').addEventListener('submit', event => {
   event.preventDefault();
   countrySearch();
 });
 
 function countrySearch() {
-    str = document.getElementById("search-field").value;
-    if (str.length == 0) {
-      document.getElementById("error-msg").innerHTML = "You must enter a query before searching";
-      return;
-    } 
+    search = $("#search-form input").val();
     
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          processResults(this);
-        }
-      };
+    //If user didn't enter a query, abort the search and display an error message
+    if (search.length == 0) {
+      showSearchError("Enter a query before searching","#search-form");
+      return;
+    }
 
-    xmlhttp.open("GET", "api/index.php?q=" + str, true);
-    xmlhttp.send();
+    $.getJSON("api/index.php",{search:search}).done(function(data){
+      responseBody = data;
+
+      var country_count = 0;
+      var regions = {};
+      
+      //Clear previous results
+      $(".error-msg").remove();
+      $("#search-results div").remove();
+      $("#search-results").show();
+
+      //Handle no results
+      if (!data || !("countries" in data) || data["countries"].length < 1) {
+        showSearchError("Search returned no results","#search-results");
+        return;
+      }
+
+      for (var key in data["countries"]) {
+        var country = data["countries"][key];
+        
+        country_count++;
+        if (!isDefined(country.region)) {
+          country.region = "Undefined";
+        }
+        incrementRegions(regions, country.region, country.subregion);
+        country.population = country.population.toLocaleString();
+        
+        $("#search-results").append(resultTemplate(country));
+      }
+
+      $("#search-results").append(summaryTemplate({
+        count: country_count,
+        regions: regions
+      }));
+
+    });
+    return;
 }
 
-function processResults(xhttp) {
-  responsebody = xhttp.responseText;
+function showSearchError(text, form){
+  $("<div>").addClass("error-msg").text(text).appendTo(form);
+}
+
+function incrementRegions(regions, region, subregion) {
+  if (!(region in regions)) {
+    regions[region] = {
+      "count": 1,
+      "subregions": {}
+    }
+    if (isDefined(subregion)) {
+      regions[region]["subregions"][subregion] = 1;
+    }
+  } else {
+    regions[region]["count"]++;
+    var subregions = regions[region]["subregions"];
+    if (isDefined(subregion)){
+      if (!(subregion in subregions)) {
+        subregions[subregion] = 1;
+      } else {
+        subregions[subregion]++;
+      }
+    }
+  }
 }
