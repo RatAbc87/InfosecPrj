@@ -1,1 +1,3 @@
-sass webroot/css/main.scss webroot/css/main.css
+sass source/css/main.scss webroot/css/main.css
+handlebars source/templates/*.handlebars -f source/js/templates.js
+uglifyjs source/js/templates.js source/js/app.js --source-map -o webroot/js/app.min.js

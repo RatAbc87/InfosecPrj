@@ -45,10 +45,7 @@ $search_type = $_REQUEST["search_type"];
 //Perform search if we have a query value
 if ($query !== "") {
 
-    if ($search_type == "all") {
-        $api = "all";
-        $query = "";
-    } else if (str_contains($search_type, "name")) {
+    if (str_contains($search_type, "name")) {
         $api = "name";
     } else if ($search_type == "alpha") {
         $api = $search_type;
@@ -65,9 +62,14 @@ if ($query !== "") {
         $results = json_decode($response);
         $countries = array();
 
-        if ($api == "name" || $api == "all") {
+        if ($api != "alpha") { //Alpha search returns a single matching country
             //For each response, populate a representative object and add it to the array
             foreach ($results as $country) {
+                //For full name search, only return matching countries
+                if ($search_type == "fullname" && strcasecmp($query, $country->{'name'})) {
+                    continue;
+                }
+
                 $new_country = new Country;
                 $new_country->setCountry($country);
                 array_push($countries, $new_country);
@@ -89,8 +91,5 @@ if ($query !== "") {
 // JSON encode and return the search results
 header('Content-Type: application/json');
 echo json_encode($server_response);
-
-
-
 ?> 
 

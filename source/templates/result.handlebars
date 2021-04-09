@@ -1,0 +1,29 @@
+<div class="well search-result">
+  <div class="row">
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+      <img class="img-thumbnail" src="{{flag}}" />
+    </div>
+
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+      <h3>
+        {{name}} <small>({{alpha2}}/{{alpha3}})</small>
+      </h3>
+      <h4>
+        {{region}}
+        {{#if (isDefined subregion)}}
+          > {{subregion}}
+        {{/if}}
+      </h4>
+      <p>
+        Population: {{formatNumber population}}
+        <br>
+        Languages:
+        <ul>
+          {{#each language}}
+            <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </p>
+    </div>
+  </div> {{! .row }}
+</div> {{! .well }}

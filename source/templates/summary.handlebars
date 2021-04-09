@@ -1,0 +1,17 @@
+<div id="summary" class="well search-result">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <h4>Search returned {{count}} {{pluralize "result" count}}</h4>
+      {{#each regions}}
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 region-summary">
+          <h5>Region: {{@key}} <span class="badge">{{this.count}}</span></h5>
+          <ul>
+            {{#each this.subregions}}
+              <li>{{@key}} <span class="badge">{{this}}</span></li>
+            {{/each}}
+          </ul>
+        </div>
+      {{/each}}
+    </div>
+  </div> {{! .row }}
+</div> {{! .well }}

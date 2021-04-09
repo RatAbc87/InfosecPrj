@@ -1,43 +1,13 @@
-.error-msg {
-  color: red;
+#search-form {
+  margin-top: 15px;
+}
+
+#error-msg {
+  display: none;
 }
 
 #search-results {
   display: none;
-}
-@media (max-width: 768px) {
-  #search-results {
-    text-align: center;
-  }
-}
-
-.well {
-  border: 0;
-  padding: 20px;
-  min-height: 63px;
-  background: #fff;
-  box-shadow: none;
-  border-radius: 3px;
-  position: relative;
-  max-height: 100000px;
-  border-bottom: 2px solid #ccc;
-  transition: max-height 0.5s ease;
-  -o-transition: max-height 0.5s ease;
-  -ms-transition: max-height 0.5s ease;
-  -moz-transition: max-height 0.5s ease;
-  -webkit-transition: max-height 0.5s ease;
-}
-
-#summary li {
-  display: inline;
-  padding-right: 15px;
-  font-style: italic;
-}
-
-.scrollable-dropdown {
-  height: auto;
-  max-height: 320px;
-  overflow-x: hidden;
 }
 
 /*# sourceMappingURL=main.css.map */
