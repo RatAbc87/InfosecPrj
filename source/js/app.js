@@ -41,7 +41,7 @@ function countrySearch() {
     }
 
     if (search_type.toLowerCase() === "alpha" && (search.length < 2 || search.length > 3)) {
-      showSearchError("You must enter 2 or 3 characters for an alpha search");
+      showSearchError("You must enter 2 or 3 characters for an alpha code search");
       return;
     }
 
@@ -62,14 +62,14 @@ function countrySearch() {
       $("#search-results").show();
 
       //Handle no results
-      if (!data || !("countries" in data) || data["countries"].length < 1) {
+      if (!data || data.length < 1) {
         showSearchError("Search returned no results");
         return;
       }
 
       //Process each country result
-      for (var key in data["countries"]) {
-        var country = data["countries"][key];
+      for (var key in data) {
+        var country = data[key];
         
         //Count the number of results
         country_count++; 

@@ -22,3 +22,8 @@ http://localhost:8765/index.html
 
 If you setup the http server differently, please provide direction on how to start it
 in your submitted project's readme file.
+
+## Submission notes
+The project is submitted fully compiled and ready to use with the above startup command.
+
+sass, handlebars, and uglify-js can all be installed with npm install

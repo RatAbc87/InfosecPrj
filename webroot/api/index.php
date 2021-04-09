@@ -38,9 +38,11 @@ class Country
     }
 }
 
-//Get the query
+//Get the search parameters
 $query = filter_var($_REQUEST["search"], FILTER_SANITIZE_STRING);
 $search_type = $_REQUEST["search_type"];
+
+//Define a params array. Only request the fields we expect to use
 $params = array(
     "fields" => "name;alpha2Code;alpha3Code;flag;region;subregion;population;languages"
 );
@@ -50,28 +52,34 @@ if ($search_type == "name") {
     $api = "name";
 } else if ($search_type == "fullname") {
     $api = "name";
-    $params["fullText"] = "true";
+
+    //Add fullText parameter for full name search
+    $params["fullText"] = "true"; 
 } else if ($search_type == "alpha") {
     $api = $search_type;
 } else {
-    //Invalid value, echo back nothing
+    //Invalid search type, echo back nothing
     header('Content-Type: application/json');
-    echo "";
+    echo json_encode("Invalid search type");
+    return;
 }
 
-//Perform search if we have a query value
+//Only perform search if we have a query
 if ($query !== "") {
 
+    //Build the url parameters string from the array
     $url_args = http_build_query($params);
+    
     $response = file_get_contents("https://restcountries.eu/rest/v2/{$api}/{$query}?{$url_args}");
 
+    //Only process the results if there was no error
     if ($response !== false) {
-        //No error, decode response and define the country array
+        //Decode response and define the country array
         $results = json_decode($response);
         $countries = array();
 
         if ($api != "alpha") { //Alpha search returns a single matching country
-            //For each response, populate a representative object and add it to the array
+            //For each country, populate a representative object and add it to the array
             foreach ($results as $country) {
                 $new_country = new Country;
                 $new_country->setCountry($country);
@@ -85,13 +93,11 @@ if ($query !== "") {
             $new_country->setCountry($results);
             array_push($countries, $new_country);
         }
-
-        $server_response['countries'] = $countries;
     }
 }
 
 // JSON encode and return the search results
 header('Content-Type: application/json');
-echo json_encode($server_response);
+echo json_encode($countries);
 ?> 
 
