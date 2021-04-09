@@ -39,23 +39,31 @@ class Country
 }
 
 //Get the query
-$query = $_REQUEST["search"];
+$query = filter_var($_REQUEST["search"], FILTER_SANITIZE_STRING);
 $search_type = $_REQUEST["search_type"];
+$params = array(
+    "fields" => "name;alpha2Code;alpha3Code;flag;region;subregion;population;languages"
+);
+
+//Validate search type and determine API to use
+if ($search_type == "name") {
+    $api = "name";
+} else if ($search_type == "fullname") {
+    $api = "name";
+    $params["fullText"] = "true";
+} else if ($search_type == "alpha") {
+    $api = $search_type;
+} else {
+    //Invalid value, echo back nothing
+    header('Content-Type: application/json');
+    echo "";
+}
 
 //Perform search if we have a query value
 if ($query !== "") {
 
-    if (str_contains($search_type, "name")) {
-        $api = "name";
-    } else if ($search_type == "alpha") {
-        $api = $search_type;
-    } else {
-        //Invalid value, echo back nothing
-        header('Content-Type: application/json');
-        echo json_encode();
-    }
-
-    $response = file_get_contents("https://restcountries.eu/rest/v2/{$api}/{$query}");
+    $url_args = http_build_query($params);
+    $response = file_get_contents("https://restcountries.eu/rest/v2/{$api}/{$query}?{$url_args}");
 
     if ($response !== false) {
         //No error, decode response and define the country array
@@ -65,11 +73,6 @@ if ($query !== "") {
         if ($api != "alpha") { //Alpha search returns a single matching country
             //For each response, populate a representative object and add it to the array
             foreach ($results as $country) {
-                //For full name search, only return matching countries
-                if ($search_type == "fullname" && strcasecmp($query, $country->{'name'})) {
-                    continue;
-                }
-
                 $new_country = new Country;
                 $new_country->setCountry($country);
                 array_push($countries, $new_country);
@@ -84,7 +87,6 @@ if ($query !== "") {
         }
 
         $server_response['countries'] = $countries;
-        
     }
 }
 
