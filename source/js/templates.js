@@ -8,9 +8,9 @@ templates['result'] = template({"1":function(container,depth0,helpers,partials,d
         return undefined
     };
 
-  return "          > "
-    + container.escapeExpression(((helper = (helper = lookupProperty(helpers,"subregion") || (depth0 != null ? lookupProperty(depth0,"subregion") : depth0)) != null ? helper : container.hooks.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"subregion","hash":{},"data":data,"loc":{"start":{"line":14,"column":12},"end":{"line":14,"column":25}}}) : helper)))
-    + "\n";
+  return "          <small>("
+    + container.escapeExpression(((helper = (helper = lookupProperty(helpers,"subregion") || (depth0 != null ? lookupProperty(depth0,"subregion") : depth0)) != null ? helper : container.hooks.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"subregion","hash":{},"data":data,"loc":{"start":{"line":14,"column":18},"end":{"line":14,"column":31}}}) : helper)))
+    + ")</small>\n";
 },"3":function(container,depth0,helpers,partials,data) {
     return "            <li>"
     + container.escapeExpression(container.lambda(depth0, depth0))
